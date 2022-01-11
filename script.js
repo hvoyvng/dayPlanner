@@ -1,50 +1,47 @@
 $(document).ready(function () {
-    // listen for save button clicks
+    // Adds current date
+    $('#currentDay').text(moment().format('dddd, MMMM Do'));
+
+    // Action when button is clicked
     $('.saveBtn').on('click', function () {
-        // get nearby values
         var value = $(this).siblings('.description').val();
         var time = $(this).parent().attr('id');
 
-        // save in localStorage
+        // Saves item into local storage
         localStorage.setItem(time, value);
-
-        // Show notification that item was saved to localStorage by adding class 'show'
-        $('.notification').addClass('show');
-
-        // Timeout to remove 'show' class after 5 seconds
-        setTimeout(function () {
-            $('.notification').removeClass('show');
-        }, 5000);
     });
 
     function hourUpdater() {
-        // get current number of hours
+        // Sets variable of time
         var currentHour = moment().hours();
 
         // loop over time blocks
         $('.time-block').each(function () {
             var blockHour = parseInt($(this).attr('id').split('-')[1]);
 
-            // check if we've moved past this time
+            // If loop to check if the current time is already past the day planner
+            // If the current hour is greater than the block hour we assign the class past
             if (blockHour < currentHour) {
                 $(this).addClass('past');
             } else if (blockHour === currentHour) {
+                // If the current hour is the same as the block hour we assign the class present
                 $(this).removeClass('past');
                 $(this).addClass('present');
             } else {
+                //We assign the class future to the hours that have not reached 
                 $(this).removeClass('past');
                 $(this).removeClass('present');
                 $(this).addClass('future');
             }
         });
     }
-
+    // Calls the function
     hourUpdater();
 
-    // set up interval to check if current time needs to be updated
+    // Updates the currrent time at an interval
     var interval = setInterval(hourUpdater, 15000);
 
-    // load any saved data from localStorage
+    // Get items from the local storage
     $('#hour-9 .description').val(localStorage.getItem('hour-9'));
     $('#hour-10 .description').val(localStorage.getItem('hour-10'));
     $('#hour-11 .description').val(localStorage.getItem('hour-11'));
@@ -54,7 +51,4 @@ $(document).ready(function () {
     $('#hour-15 .description').val(localStorage.getItem('hour-15'));
     $('#hour-16 .description').val(localStorage.getItem('hour-16'));
     $('#hour-17 .description').val(localStorage.getItem('hour-17'));
-
-    // display current day on page
-    $('#currentDay').text(moment().format('dddd, MMMM Do'));
 });
